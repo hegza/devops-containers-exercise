@@ -1,0 +1,11 @@
+cont-build:
+    podman build -t service-go -f Containerfile --cpuset-cpus 0-12
+
+cont-run:
+    podman run -dit service-go
+
+cont-exec: cont-build
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    hash=$(podman run -dit service-go)
+    podman exec -w=/app/ -it $hash /bin/bash
