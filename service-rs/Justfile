@@ -1,5 +1,5 @@
 cont-build:
-    podman build -t service-rs -f Containerfile --cpuset-cpus 0-12
+    podman build -t service-rs -f Dockerfile --cpuset-cpus 0-12
 
 cont-run:
     podman run -dit service-rs
