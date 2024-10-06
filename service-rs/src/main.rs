@@ -1,11 +1,14 @@
-use axum::{response::Html, routing::get, Router};
+mod sysinfo_response;
+
+use axum::{response::Json, routing::get, Router};
+use sysinfo_response::SysInfo;
 
 #[tokio::main]
 async fn main() {
     let app = Router::new().route("/", get(handler));
 
     // Listen on TCP
-    let addr = "127.0.0.1:3000";
+    let addr = "127.0.0.1:8199";
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     println!("Server listening for TCP at {addr}");
 
@@ -13,6 +16,8 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn handler() -> Html<&'static str> {
-    Html("<h1>Hello, Rust!</h1>")
+async fn handler() -> Json<sysinfo_response::Response> {
+    let theirs = SysInfo::from_mock();
+    let ours = SysInfo::from_local_info();
+    Json(sysinfo_response::Response::from_infos(ours, theirs))
 }
