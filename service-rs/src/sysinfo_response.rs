@@ -1,11 +1,12 @@
 use std::{
     net::IpAddr,
     path::PathBuf,
+    process,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
 use serde::Serialize;
-use sysinfo::{Disks, Networks, Pid, System};
+use sysinfo::{Disks, Networks, System};
 
 #[derive(Serialize)]
 pub(crate) struct Response {
@@ -23,8 +24,8 @@ impl Response {
 pub(crate) struct SysInfo {
     /// IP address information, each can be IPv4 or IPv6
     ips: Vec<std::net::IpAddr>,
-    /// List of running processes
-    pss: Vec<(sysinfo::Pid, String)>,
+    /// Output of `ps -ax`
+    ps_ax: String,
     /// Available disk space in bytes
     available_bytes: u64,
     /// Time since last boot in seconds
@@ -34,13 +35,13 @@ pub(crate) struct SysInfo {
 impl SysInfo {
     pub fn from_local_info() -> Self {
         let ips = get_local_ips();
-        let pss = processes();
+        let pss = ps_ax();
         let available_bytes = available_bytes();
         let uptime_secs = uptime_secs();
 
         Self {
             ips,
-            pss,
+            ps_ax: pss,
             available_bytes,
             uptime_secs,
         }
@@ -49,7 +50,7 @@ impl SysInfo {
     pub fn from_mock() -> Self {
         Self {
             ips: get_local_ips(),
-            pss: vec![(Pid::from(1), String::from("dummy process"))],
+            ps_ax: String::new(),
             available_bytes: 1024,
             uptime_secs: 42,
         }
@@ -63,13 +64,21 @@ fn uptime_secs() -> u64 {
     since.as_secs()
 }
 
-fn processes() -> Vec<(sysinfo::Pid, String)> {
-    let mut sys = System::new();
-    sys.refresh_processes(sysinfo::ProcessesToUpdate::All);
-    sys.processes()
-        .into_iter()
-        .map(|(pid, proc)| (*pid, proc.name().to_string_lossy().into_owned()))
-        .collect()
+/// Retrieve output for the `ps -ax` command
+fn ps_ax() -> String {
+    let out = process::Command::new("ps")
+        .arg("-ax")
+        .output()
+        .expect("Failed to execute command");
+
+    if !out.status.success() {
+        eprintln!("Command failed to execute");
+    }
+
+    // Convert command output into UTF-8
+    let stdout = String::from_utf8(out.stdout).expect("`ps -ax` output is not valid UTF-8");
+
+    stdout.to_owned()
 }
 
 fn available_bytes() -> u64 {
