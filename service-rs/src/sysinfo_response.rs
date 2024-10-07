@@ -1,4 +1,5 @@
 use std::{
+    net::IpAddr,
     path::PathBuf,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
@@ -21,7 +22,7 @@ impl Response {
 #[derive(Serialize)]
 pub(crate) struct SysInfo {
     /// IP address information, each can be IPv4 or IPv6
-    ip_addrs: Vec<std::net::IpAddr>,
+    ips: Vec<std::net::IpAddr>,
     /// List of running processes
     pss: Vec<(sysinfo::Pid, String)>,
     /// Available disk space in bytes
@@ -32,13 +33,13 @@ pub(crate) struct SysInfo {
 
 impl SysInfo {
     pub fn from_local_info() -> Self {
-        let ip_addrs = get_local_ips();
+        let ips = get_local_ips();
         let pss = processes();
         let available_bytes = available_bytes();
         let uptime_secs = uptime_secs();
 
         Self {
-            ip_addrs,
+            ips,
             pss,
             available_bytes,
             uptime_secs,
@@ -47,7 +48,7 @@ impl SysInfo {
 
     pub fn from_mock() -> Self {
         Self {
-            ip_addrs: get_local_ips(),
+            ips: get_local_ips(),
             pss: vec![(Pid::from(1), String::from("dummy process"))],
             available_bytes: 1024,
             uptime_secs: 42,
@@ -82,6 +83,18 @@ fn available_bytes() -> u64 {
     root_disk.available_space()
 }
 
+fn is_internal(ip: &IpAddr) -> bool {
+    match ip {
+        // Check if the IPv4 address falls in the private ranges (10.0.0.0/8,
+        // 172.16.0.0/12, and 192.168.0.0/16) as specified by RFC 1918 Address
+        // Allocation for Private Internets
+        IpAddr::V4(ipv4) => ipv4.is_private(),
+        // Check if the IPv6 address is within the fc00::/7 range (Unique Local
+        // Addresses) as specified by RFC 4193
+        IpAddr::V6(ipv6) => ipv6.segments()[0] & 0xfe00 == 0xfc00,
+    }
+}
+
 fn get_local_ips() -> Vec<std::net::IpAddr> {
     let networks = Networks::new_with_refreshed_list();
 
@@ -94,14 +107,13 @@ fn get_local_ips() -> Vec<std::net::IpAddr> {
             let ip_nets = net.ip_networks();
             ip_nets.iter().map(|ip_net| ip_net.addr)
         })
-        // Ignore loopback networks
-        .filter(|addr| !addr.is_loopback())
+        // Ignore loopback networks & internal IPs
+        .filter(|addr| !addr.is_loopback() && !is_internal(addr))
         .collect::<Vec<_>>();
 
     if ips.len() == 0 {
         panic!("No IP available");
     }
 
-    // Safety: we have made sure there is exactly one IP
     ips
 }
