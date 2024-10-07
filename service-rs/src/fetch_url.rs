@@ -15,7 +15,11 @@ pub(crate) async fn fetch_url(
     let addr = format!("{}:{}", host, port);
 
     println!("GET {}...", addr);
-    let stream = TcpStream::connect(addr).await?;
+    let stream = TcpStream::connect(addr).await;
+    if stream.is_err() {
+        eprintln!("Connection refused");
+    }
+    let stream = stream?;
     let io = TokioIo::new(stream);
 
     let (mut sender, conn) = hyper::client::conn::http1::handshake(io).await?;

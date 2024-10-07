@@ -38,11 +38,11 @@ pub(crate) async fn handler() -> Result<Json<Response>> {
 // The kinds of errors we can hit in our application.
 #[derive(Error, Debug)]
 pub(crate) enum AppError {
-    #[error("failure querying service-go")]
+    #[error("failure querying service-go: {0}")]
     GetFromServiceGo(String),
     #[error("failed to deserialize input")]
     Deser(#[from] serde_json::Error),
-    #[error("failed to fetch URI")]
+    #[error("failed to fetch URI {0}: {1:?}")]
     Fetch(String, Box<dyn std::error::Error + Send + Sync>),
 }
 
