@@ -6,7 +6,7 @@ use std::str;
 
 use axum::{routing::get, Router};
 
-const LOCAL_ADDR: &str = "0.0.0.0:8199";
+const LISTEN_ADDR: &str = "0.0.0.0:3000";
 const SERVICE_GO_URI: &str = "http://0.0.0.0:3000";
 
 #[tokio::main]

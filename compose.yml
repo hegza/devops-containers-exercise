@@ -4,7 +4,7 @@ services:
       context: ./service-rs
       dockerfile: Dockerfile
     ports:
-      - "8199:3001"
+      - "8199:3000"
     depends_on:
       - service-go
   service-go:

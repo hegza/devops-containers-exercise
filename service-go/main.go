@@ -10,7 +10,7 @@ import (
 func main() {
 	http.HandleFunc("/", handler)
 
-	// Listen on TCP
+	// Listen for TCP on port 3000
 	addr := "0.0.0.0:3000"
 	fmt.Println("Starting server at", addr)
 	go func() {
