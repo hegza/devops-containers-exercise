@@ -4,7 +4,7 @@ FROM docker.io/library/golang:1.23.2
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the source code to the container
+# Copy the source code to the container. We use .dockerignore to avoid unnecessary files.
 COPY . .
 
 # Download all Go modules and dependencies
