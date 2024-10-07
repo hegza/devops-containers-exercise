@@ -38,10 +38,6 @@ pub(crate) async fn handler() -> Result<Json<Response>> {
 // The kinds of errors we can hit in our application.
 #[derive(Error, Debug)]
 pub(crate) enum AppError {
-    /*
-    // Some error from a third party library we're using
-    TimeError(time_library::Error),
-    */
     #[error("failure querying service-go")]
     GetFromServiceGo(String),
     #[error("failed to deserialize input")]
