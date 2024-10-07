@@ -11,7 +11,7 @@ func main() {
 	http.HandleFunc("/", handler)
 
 	// Listen on TCP
-	addr := "127.0.0.1:3000"
+	addr := "0.0.0.0:3000"
 	fmt.Println("Starting server at", addr)
 	go func() {
 		err := http.ListenAndServe(addr, nil)
