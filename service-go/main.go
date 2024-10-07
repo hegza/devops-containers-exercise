@@ -11,15 +11,15 @@ func main() {
 	http.HandleFunc("/", handler)
 
 	// Listen for TCP on port 3000
-	addr := "0.0.0.0:3000"
-	fmt.Println("Starting server at", addr)
+	listen_addr := "0.0.0.0:3000"
+	fmt.Println("Starting server at", listen_addr)
 	go func() {
-		err := http.ListenAndServe(addr, nil)
+		err := http.ListenAndServe(listen_addr, nil)
 		if err != nil {
 			fmt.Println("Error starting server:", err)
 		}
 	}()
-	fmt.Println("Server listening for TCP at", addr)
+	fmt.Println("Server listening for TCP at", listen_addr)
 
 	select {}
 }

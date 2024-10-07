@@ -14,8 +14,8 @@ async fn main() {
     let app = Router::new().route("/", get(api::handler));
 
     // Listen on TCP
-    let listener = tokio::net::TcpListener::bind(LOCAL_ADDR).await.unwrap();
-    println!("Server listening for TCP at {LOCAL_ADDR}");
+    let listener = tokio::net::TcpListener::bind(LISTEN_ADDR).await.unwrap();
+    println!("Server listening for TCP at {LISTEN_ADDR}");
 
     // Use `hyper::server::Server` which is re-exported through `axum::Server` to serve the app.
     axum::serve(listener, app).await.unwrap();
