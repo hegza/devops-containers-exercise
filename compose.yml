@@ -5,9 +5,18 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8199:3001"
+    depends_on:
+      service-go:
+        condition: service_healthy
   service-go:
     build:
       context: ./service-go
       dockerfile: Dockerfile
     expose:
       - "3000"
+    healthcheck:
+      test: curl -f https://localhost:3000 || exit 1
+      interval: 10s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
