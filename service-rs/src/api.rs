@@ -46,28 +46,25 @@ pub(crate) enum AppError {
     GetFromServiceGo(String),
     #[error("failed to deserialize input")]
     Deser(#[from] serde_json::Error),
-    #[error("internal server error")]
-    Generic(Box<dyn std::error::Error + Send + Sync>),
+    #[error("failed to fetch URI")]
+    Fetch(String, Box<dyn std::error::Error + Send + Sync>),
 }
 
-// Tell axum how `AppError` should be converted into a response.
-//
-// This is also a convenient place to log errors.
+// Map `AppError` an axum response
 impl IntoResponse for AppError {
     fn into_response(self) -> axum::response::Response {
-        // How we want errors responses to be serialized
         #[derive(Serialize)]
         struct ErrorResponse {
             message: String,
         }
 
-        let (status, message) = match self {
-            AppError::GetFromServiceGo(error) => (StatusCode::INTERNAL_SERVER_ERROR, error),
-            AppError::Deser(error) => (StatusCode::INTERNAL_SERVER_ERROR, error.to_string()),
-            AppError::Generic(error) => (StatusCode::INTERNAL_SERVER_ERROR, error.to_string()),
-        };
-
-        (status, AppJson(ErrorResponse { message })).into_response()
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            AppJson(ErrorResponse {
+                message: self.to_string(),
+            }),
+        )
+            .into_response()
     }
 }
 
