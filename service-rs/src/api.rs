@@ -51,7 +51,7 @@ pub(crate) enum AppError {
     Fetch(String, Box<dyn std::error::Error + Send + Sync>),
 }
 
-// Map `AppError` an axum response
+// Map `AppError` into an axum response
 impl IntoResponse for AppError {
     fn into_response(self) -> axum::response::Response {
         #[derive(Serialize)]
