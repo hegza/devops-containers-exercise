@@ -1,3 +1,5 @@
+use core::str;
+
 use crate::{
     fetch_url::fetch_url,
     sysinfo_response::{self, Response},
@@ -25,9 +27,12 @@ pub(crate) async fn handler() -> Result<Json<Response>> {
             "invalid header: missing 'content-type'".to_string(),
         ))?;
     if content_type != "application/json" {
-        return Err(AppError::GetFromServiceGo(
-            "invalid header: 'content-type' needs to be JSON".to_string(),
+        let content = str::from_utf8(&body).ok();
+        let err = AppError::GetFromServiceGo(format!(
+            "invalid header: 'content-type' needs to be JSON, content: {:?}",
+            content
         ));
+        return Err(err);
     }
 
     let theirs = serde_json::from_slice(&body).map_err(|e| AppError::Deser(e))?;

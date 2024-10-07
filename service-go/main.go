@@ -35,25 +35,25 @@ type SysInfo struct {
 func handler(w http.ResponseWriter, r *http.Request) {
 	ips, err := getsysinfo.GetIpAddress()
 	if err != nil {
-		http.Error(w, "Unable to get IP address", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Unable to get IP address: %s", err), http.StatusInternalServerError)
 		return
 	}
 
 	ps_ax, err := getsysinfo.GetPsAx()
 	if err != nil {
-		http.Error(w, "Unable to get output of `ps -ax`", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Unable to get output of `ps -ax`: %s", err), http.StatusInternalServerError)
 		return
 	}
 
 	available_bytes, err := getsysinfo.GetAvailableBytesOnRoot()
 	if err != nil {
-		http.Error(w, "Unable to get available bytes on root partition", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Unable to get available bytes on root partition: %s", err), http.StatusInternalServerError)
 		return
 	}
 
 	uptime_secs, err := getsysinfo.GetUptime()
 	if err != nil {
-		http.Error(w, "Unable to get uptime", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Unable to get uptime: %s", err), http.StatusInternalServerError)
 		return
 	}
 
