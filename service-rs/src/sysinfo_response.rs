@@ -3,10 +3,7 @@ mod net;
 mod ps_ax;
 mod uptime;
 
-use std::{net::IpAddr, path::PathBuf};
-
 use serde::{Deserialize, Serialize};
-use sysinfo::{Disks, Networks};
 
 #[derive(Serialize)]
 pub(crate) struct Response {
