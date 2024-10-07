@@ -1,0 +1,140 @@
+# LLM disclosure
+
+## Meta
+
+- The used LLM tool: ChatGPT 4o available via https://chatgpt.com/
+- Motivation/reason to use LLM: I decided to learn myself a little bit of
+Go-lang for the assignment. I used ChatGPT 4o to walk me through the Go lang
+specific versions of what I had already done in Rust by myself. It seemed
+prudent, as the training data set for ChatGPT 4o is already full of basic web
+servers written in Go, so I was almost certain the (statistical) model could
+synthesize basic Go implementations. Notably, I wrote all of the Rust code and
+its Dockerfile by myself although I monomorphized the commentary after
+generating the Go container. I also specifically did not ask the LLM for advise
+on how to structure the Go project, as I felt that I needed to deep learn the
+ideas behind Go project layout myself.
+- How and why LLM helped: see above.
+- What kind of mistakes LLM did: not much, to be frank. I think I used the LLM
+in a very appropriate way. I already knew to avoid trying to generate anything
+that is "at the frontier" of open-source development, i.e., something that might
+not be well-represented in the data set, or anything safety critical, or
+anything that required a high amount of correctness.
+- What were things that LLM was not able to provide: ChatGPT 4o is generally
+quite useless for producing code related to newer Rust web frameworks, as the
+training dataset for ChatGPT 4o does not include much on these.
+
+
+## 5.10.-24, on creating a Go project
+
+Since I've never written a proper go program before, I used ChatGPT 4o to talk
+me through creating a go project and figuring out how to gather the necessary
+system info. There are two reasons for why I think AI is particularly useful
+here:
+
+1. There is an abundance of training material on "how to make a web server in
+go"
+2. Incorrect implementations are very easy to see based on the behavior of
+the development environment
+
+Indeed, the LLM produced appropriate and functional examples for go language.
+Notably, I did not use an LLM to produce the Rust examples, as I've a pretty
+good routine for programming Rust and was able to figure what's what based on
+the documentation faster than what it would've taken if I were to communicate
+about it with an LLM.
+
+## 6.10.-24, on setting up Dockerfiles
+
+I used an LLM to tell me how to set up a go-lang container for testing the code.
+I got the following output
+
+```Dockerfile
+
+# Use an official Go runtime as a parent image
+FROM golang:1.20
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Go module files to the container
+COPY go.mod go.sum ./
+
+# Download all Go modules and dependencies
+RUN go mod download
+
+# Copy the source code to the container
+COPY . .
+
+# Build the Go application
+RUN go build -o main .
+
+# Command to run the Go program
+CMD ["./main"]
+```
+
+As I've written some containers before, I understand all of the commands
+produced by the LLM and mostly agree with its choices, with the following
+corrections:
+
+I went to DockerHub to find the latest image for `golang`, as LLMs are typically
+frozen in time and cannot provide such information. I specifically wanted a
+frozen version that matches with the current latest version, as I don't want
+breakage from a rolling release. The latest version available at this time was
+1.23.2.
+
+The copying was a little excessive so I removed the redundant parts.
+
+It required some work to make sure that build artifacts aren't copied around, as
+would be done by the initial LLM implementation. I decided to place all go build
+artifacts inside a build/ directory. I made sure to symlink .gitignore to
+.dockerignore as .gitignore and .dockerignore should match exactly for this
+project, as we are emulating all of the build steps inside the container, as if
+the target was a freshly cloned repository.
+
+Finally, I made the Rust container based on the Go container, built the
+containers and SSH'd to each built container to validate that the resultant
+system is what I expected.
+
+## 6.10.-24, on setting up compose.yml
+
+Since I've never seen a Docker compose file before, I used ChatGPT 4o to create
+a skeleton that matches somewhat with the specification.
+
+## 6.10.-24, on gettin system info in Go
+
+I used ChatGPT 4o to get a basic implemementation of how to get a local IP and
+adapted that to return all available external IPs.
+
+I used ChatGPT 4o to show me how to read info on current disks, and tested that
+the produced code indeed gets legitimate data from the system by comparing with
+output from `df`. However, I wrote the final implementation for getting
+available bytes on rootfs by myself.
+
+I used ChatGPT 4o to retrieve system uptime, I then verified the code produces
+the same result as `cat /proc/uptime`.
+
+Using an LLM was not really necessary nor useful for the `ps -ax` part.
+
+## 6.10.-24, on serializing in Go
+
+I asked ChatGPT 4o how to serialize a struct containing multiple fields to JSON
+and got a fine answer. I adapted it to match the data-layout I designed for the
+Rust application.
+
+## 7.10.-24, on excluding external IP addresses
+
+I was wondering that we probably want the external/public IP instead of all IPs
+so I tried to find out how do people usually decide whether an IP is internal or
+external. I found quickly that it's defined by relevant standards. I asked
+ChatGPT 4o to produce the Go code to determine whether an IP is internal or
+external. Then I reviewed the code and the relevant standards (RFC 1918 for IPv4
+and RFC 4193 for IPv6) for a match with the generated code and smoke tested it
+for correctness. Then I refactored the code to fit my style and legibility
+preferences by separating each RFC implementation to a method and unnesting the
+code.
+
+Next, I went over to the Rust side, and compared the standard library
+implementation for RFC 1918 for a code match with the generated & refactor Go
+implementation, then I wrote the IPv6 version to match with the pre-validated Go
+code for 4193.
+
+I realized only later that I needed none of this and removed all relevant code.
