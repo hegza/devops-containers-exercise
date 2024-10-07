@@ -17,5 +17,3 @@ services:
     build:
       context: ./service-go
       dockerfile: Dockerfile
-    expose:
-      - "3000"
