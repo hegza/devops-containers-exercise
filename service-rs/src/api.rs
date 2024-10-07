@@ -1,5 +1,5 @@
 use crate::{
-    fetch_url,
+    fetch_url::fetch_url,
     sysinfo_response::{self, Response},
     SERVICE_GO_URI,
 };
@@ -12,7 +12,6 @@ use serde::Serialize;
 use sysinfo_response::SysInfo;
 use thiserror::Error;
 
-///
 type Result<T> = std::result::Result<T, AppError>;
 
 pub(crate) async fn handler() -> Result<Json<Response>> {
