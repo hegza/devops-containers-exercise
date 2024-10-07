@@ -1,0 +1,10 @@
+CONTAINER ID   IMAGE                                   COMMAND                  CREATED              STATUS              PORTS                                         NAMES
+2c2d1dd86c0d   devops-containers-exercise-service-rs   "./target/release/se…"   About a minute ago   Up About a minute   0.0.0.0:8199->3000/tcp, [::]:8199->3000/tcp   devops-containers-exercise-service-rs-1
+767c7df6268c   devops-containers-exercise-service-go   "./build/main"           About a minute ago   Up About a minute                                                 devops-containers-exercise-service-go-1
+
+NETWORK ID     NAME                                 DRIVER    SCOPE
+234d14955174   bridge                               bridge    local
+ec3cbc82aeff   devops-containers-exercise_default   bridge    local
+8f98fb15308f   host                                 host      local
+db5236de2278   none                                 null      local
+
