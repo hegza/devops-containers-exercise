@@ -47,6 +47,8 @@ impl SysInfo {
         }
     }
 
+    /// Generate mocked up data, e.g., to emulate server-go
+    #[cfg(test)]
     pub fn from_mock() -> Self {
         Self {
             ips: get_local_ips(),
