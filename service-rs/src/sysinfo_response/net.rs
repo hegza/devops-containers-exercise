@@ -18,8 +18,6 @@ pub(crate) fn get_local_ips() -> Vec<IpAddr> {
 
     let ips = networks
         .into_iter()
-        // Ignore docker networks
-        .filter(|(name, _)| !name.starts_with("docker"))
         .flat_map(|(_, net)| {
             // Safety: there's only one network remaining
             let ip_nets = net.ip_networks();
