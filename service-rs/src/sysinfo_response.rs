@@ -5,7 +5,7 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sysinfo::{Disks, Networks, System};
 
 #[derive(Serialize)]
@@ -20,7 +20,7 @@ impl Response {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub(crate) struct SysInfo {
     /// IP address information, each can be IPv4 or IPv6
     ips: Vec<std::net::IpAddr>,
