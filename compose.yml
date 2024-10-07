@@ -1,0 +1,13 @@
+services:
+  service-rs:
+    build:
+      context: ./service-rs
+      dockerfile: Dockerfile
+    ports:
+      - "8199:3001"
+  service-go:
+    build:
+      context: ./service-go
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
