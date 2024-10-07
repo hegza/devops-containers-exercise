@@ -48,7 +48,7 @@ impl SysInfo {
     #[cfg(test)]
     pub fn from_mock() -> Self {
         Self {
-            ips: get_local_ips(),
+            ips: net::get_local_ips(),
             ps_ax: String::new(),
             available_bytes: 1024,
             uptime_secs: 42,
