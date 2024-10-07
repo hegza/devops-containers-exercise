@@ -9,7 +9,7 @@ import (
 // Gets the number of bytes available on rootfs
 func GetAvailableBytesOnRoot() (uint64, error) {
 	// Get all available partitions
-	partitions, err := disk.Partitions(false)
+	partitions, err := disk.Partitions(true)
 	if err != nil {
 		return 0, fmt.Errorf("error retrieving partitions: %s", err)
 	}
