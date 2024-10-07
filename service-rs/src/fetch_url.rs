@@ -3,12 +3,10 @@ use hyper::Request;
 use hyper_util::rt::TokioIo;
 use tokio::{io::AsyncWriteExt as _, net::TcpStream};
 
-// A simple type alias so as to DRY
+/// Generic `Result` with a message
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
-/// Makes GET request to a URI
-///
-/// Returns the response and its streamed body
+/// Makes a GET request to a URI and returns the response and its streamed body. Logs on stdout.
 pub(crate) async fn fetch_url(
     uri: hyper::Uri,
 ) -> Result<(hyper::Response<hyper::body::Incoming>, Vec<u8>)> {

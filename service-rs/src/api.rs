@@ -17,7 +17,7 @@ type Result<T> = std::result::Result<T, AppError>;
 pub(crate) async fn handler() -> Result<Json<Response>> {
     let (res, body) = fetch_url(Uri::from_static(SERVICE_GO_URI))
         .await
-        .map_err(AppError::Generic)?;
+        .map_err(|err| AppError::Fetch(SERVICE_GO_URI.to_owned(), err))?;
     let header = res.headers();
     let content_type = header
         .get("content-type")
@@ -68,8 +68,8 @@ impl IntoResponse for AppError {
     }
 }
 
-// Wrap `axum::Json`. This makes it easy to override the rejection and provide
-// our own which formats errors to match our application.
+// Wrap `axum::Json`. This makes it easy to override the rejection and provide our own which formats
+// errors to match our application.
 //
 // `axum::Json` responds with plain text if the input is invalid.
 #[derive(FromRequest)]
