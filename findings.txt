@@ -7,9 +7,8 @@ The containers also *do not* share the list of processes with the host.
 The containers share the physical disk although via a virtual overlay filesystem
 managed by Docker. The overlay filesystem size is the same for both containers.
 
-The uptime (/proc/uptime) is shared to the second between host and containers.
-That is curious, as that implies that perhaps some other features of the host
-are shared as well. This implies that the container abstraction is by no means a
-perfect virtualization, and that the container can sometimes retrieve
-information from the host, even if it may be something relatively benign such as
-uptime.
+The uptime (/proc/uptime) is shared between host and containers. That is
+curious, as that implies that perhaps some other features of the host are shared
+as well. This implies that the container abstraction is by no means a perfect
+virtualization, and that the container can sometimes retrieve information from
+the host, even if it may be something relatively benign such as uptime.
