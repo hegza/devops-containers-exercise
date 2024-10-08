@@ -4,8 +4,8 @@ network. Docker may then forward some of the ports in the network to the host.
 
 The containers also *do not* share the list of processes with the host.
 
-The containers share the physical disk although via a virtual overlay filesystem
-managed by Docker. The overlay filesystem size is the same for both containers.
+The containers share the physical disk via a virtual overlay filesystem managed
+by Docker. The overlay filesystem size is the same for both containers.
 
 The uptime (/proc/uptime) is shared between host and containers. That is
 curious, as that implies that perhaps some other features of the host are shared
