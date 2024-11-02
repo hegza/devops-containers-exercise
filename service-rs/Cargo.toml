@@ -7,10 +7,13 @@ edition = "2021"
 axum = { version = "0.7.6", features = ["macros"] }
 futures-io = { version = "0.3.31", default-features = false }
 http-body-util = "0.1.2"
-hyper = { version = "1.4.1", features = ["client"] }
-hyper-util = { version = "0.1.9", features = ["client", "tokio"] }
-serde = { version = "1.0.210", features = ["serde_derive", "derive"] }
-serde_json = "1.0.128"
-sysinfo = { version = "0.31.4", features = ["serde"] }
-thiserror = "1.0.64"
-tokio = { version = "1.40.0", default-features = false, features = ["io-util", "rt-multi-thread"] }
+hyper = { version = "1.5.0", features = ["client"] }
+hyper-util = { version = "0.1.10", features = ["client", "tokio"] }
+serde = { version = "1.0.214", features = ["serde_derive", "derive"] }
+serde_json = "1.0.132"
+sysinfo = { version = "0.32.0", features = ["serde"] }
+thiserror = "1.0.66"
+tokio = { version = "1.41.0", default-features = false, features = [
+    "io-util",
+    "rt-multi-thread",
+] }
