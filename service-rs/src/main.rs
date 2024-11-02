@@ -12,7 +12,15 @@ const SERVICE_GO_URI: sync::LazyLock<&str> =
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(api::handler));
+    let service_lock = sync::Arc::new(sync::Mutex::new(()));
+
+    let app = Router::new().route(
+        "/",
+        get({
+            let lock = sync::Arc::clone(&service_lock);
+            move || crate::api::handler(lock)
+        }),
+    );
 
     // Listen on TCP
     let listener = tokio::net::TcpListener::bind(LISTEN_ADDR).await.unwrap();

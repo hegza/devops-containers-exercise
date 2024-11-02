@@ -1,4 +1,4 @@
-use core::str;
+use std::{str, sync};
 
 use crate::{
     fetch_url::fetch_url,
@@ -16,7 +16,11 @@ use thiserror::Error;
 
 type Result<T> = std::result::Result<T, AppError>;
 
-pub(crate) async fn handler() -> Result<Json<Response>> {
+pub(crate) async fn handler(_service_lock: sync::Arc<sync::Mutex<()>>) -> Result<Json<Response>> {
+    // Wait for lock if simulating delay
+    #[cfg(feature = "sim-delay")]
+    let _guard = *_service_lock.lock().unwrap();
+
     let (res, body) = fetch_url(Uri::from_static(&SERVICE_GO_URI))
         .await
         .map_err(|err| AppError::FetchGo(SERVICE_GO_URI.to_owned(), err))?;
@@ -37,7 +41,20 @@ pub(crate) async fn handler() -> Result<Json<Response>> {
 
     let theirs = serde_json::from_slice(&body).map_err(|e| AppError::Deser(e))?;
     let ours = SysInfo::from_local_info();
-    Ok(Json(sysinfo_response::Response::from_infos(ours, theirs)))
+
+    // Hold onto lock to produce a sleep if simulating delay
+    #[cfg(feature = "sim-delay")]
+    std::thread::spawn(move || {
+        let _guard = _service_lock.lock().unwrap();
+        let delay_s = 2;
+        println!("Simulating delay by holding onto lock for {delay_s} seconds...");
+        std::thread::sleep(std::time::Duration::from_secs(delay_s));
+        println!("Simulated delay completed. Ready for next request.");
+    });
+
+    let resp = Json(sysinfo_response::Response::from_infos(ours, theirs));
+    println!("Returning response");
+    Ok(resp)
 }
 
 // The kinds of errors we can hit in our application.

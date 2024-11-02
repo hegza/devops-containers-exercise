@@ -17,3 +17,6 @@ tokio = { version = "1.41.0", default-features = false, features = [
     "io-util",
     "rt-multi-thread",
 ] }
+
+[features]
+sim-delay = []
