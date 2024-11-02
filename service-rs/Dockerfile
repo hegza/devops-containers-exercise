@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the application
-RUN cargo build --release
+RUN cargo build --release -Fsim-delay
 
 # Run the program on container startup
 CMD ["./target/release/service-rs"]

@@ -3,11 +3,21 @@ services:
     build:
       context: ./service-go
       dockerfile: Dockerfile
+
   service-rs:
     build:
       context: ./service-rs
       dockerfile: Dockerfile
-    ports:
-      - "8199:3000"
+    deploy:
+      replicas: 3
     depends_on:
       - service-go
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8198:80"
+    depends_on:
+      - service-rs
