@@ -1,4 +1,8 @@
 services:
+  service-go:
+    build:
+      context: ./service-go
+      dockerfile: Dockerfile
   service-rs:
     build:
       context: ./service-rs
@@ -7,7 +11,3 @@ services:
       - "8199:3000"
     depends_on:
       - service-go
-  service-go:
-    build:
-      context: ./service-go
-      dockerfile: Dockerfile
