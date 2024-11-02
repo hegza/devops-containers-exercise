@@ -19,7 +19,7 @@ type Result<T> = std::result::Result<T, AppError>;
 pub(crate) async fn handler() -> Result<Json<Response>> {
     let (res, body) = fetch_url(Uri::from_static(SERVICE_GO_URI))
         .await
-        .map_err(|err| AppError::Fetch(SERVICE_GO_URI.to_owned(), err))?;
+        .map_err(|err| AppError::FetchGo(SERVICE_GO_URI.to_owned(), err))?;
     let header = res.headers();
     let content_type = header
         .get("content-type")
@@ -43,12 +43,12 @@ pub(crate) async fn handler() -> Result<Json<Response>> {
 // The kinds of errors we can hit in our application.
 #[derive(Error, Debug)]
 pub(crate) enum AppError {
-    #[error("failure querying service-go: {0}")]
+    #[error("Failure querying service-go: {0}")]
     GetFromServiceGo(String),
-    #[error("failed to deserialize input")]
+    #[error("Failed to deserialize input")]
     Deser(#[from] serde_json::Error),
-    #[error("failed to fetch URI {0}: {1:?}")]
-    Fetch(String, Box<dyn std::error::Error + Send + Sync>),
+    #[error("Failed to fetch URI {0}, perhaps the service is not running. Error: {1:?}")]
+    FetchGo(String, Box<dyn std::error::Error + Send + Sync>),
 }
 
 // Map `AppError` into an axum response
