@@ -17,7 +17,7 @@ use thiserror::Error;
 type Result<T> = std::result::Result<T, AppError>;
 
 pub(crate) async fn handler() -> Result<Json<Response>> {
-    let (res, body) = fetch_url(Uri::from_static(SERVICE_GO_URI))
+    let (res, body) = fetch_url(Uri::from_static(&SERVICE_GO_URI))
         .await
         .map_err(|err| AppError::FetchGo(SERVICE_GO_URI.to_owned(), err))?;
     let header = res.headers();

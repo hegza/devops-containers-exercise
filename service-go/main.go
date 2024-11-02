@@ -5,22 +5,40 @@ import (
 	"fmt"
 	"internal/getsysinfo"
 	"net/http"
+	"os"
+	"strconv"
 )
 
-const ListenAddr = "0.0.0.0:3000"
+const ListenAddr = "0.0.0.0"
+const DefaultListenPort = 3000
+
+// Get an environment variable with a default value if it's missing
+func GetEnvUint64(key string, defaultValue uint64) uint64 {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		return defaultValue
+	}
+	u64, err := strconv.ParseUint(value, 10, 64)
+	if err != nil {
+		panic(fmt.Sprintf("%s must be a number, %s", key, err))
+	}
+	return u64
+}
 
 func main() {
 	http.HandleFunc("/", handler)
 
-	// Listen for TCP on port 3000
-	fmt.Println("Starting server at", ListenAddr)
+	listenAddr := fmt.Sprintf("%s:%d", ListenAddr, GetEnvUint64("PORT", DefaultListenPort))
+
+	// Listen for TCP
+	fmt.Println("Starting server at", listenAddr)
 	go func() {
-		err := http.ListenAndServe(ListenAddr, nil)
+		err := http.ListenAndServe(listenAddr, nil)
 		if err != nil {
 			fmt.Println("Error starting server:", err)
 		}
 	}()
-	fmt.Println("Server listening for TCP at", ListenAddr)
+	fmt.Println("Server listening for TCP at", listenAddr)
 
 	select {}
 }
