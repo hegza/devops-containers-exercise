@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <button onClick="startRequest()">REQUEST (startRequest())</button>
+    <a href="shutdown.php">STOP (shutdown.php)</a>
+    <textarea id="response_area" name="response_area" rows="20" cols="100">
+    Text area.
+    </textarea>
+
+    <script>
+        function startRequest() {
+            fetch("/proxy")
+                .then(response => response.text())
+                .then(data => alert("Request forwarded: " + data))
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+
+</html>
