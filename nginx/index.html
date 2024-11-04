@@ -6,19 +6,19 @@
 </head>
 
 <body>
-    <button onClick="startRequest()">REQUEST (startRequest())</button>
+    <button onClick="fetchContent()">REQUEST (fetchContent())</button>
     <a href="shutdown.php">STOP (shutdown.php)</a>
-    <textarea id="response_area" name="response_area" rows="20" cols="100">
+    <textarea id="responseArea" name="responseArea" rows="20" cols="100">
     Text area.
     </textarea>
 
     <script>
-        function startRequest() {
-            fetch("/proxy")
-                .then(response => response.json())
-                // Set response_area from JSON contents
-                .then(data => document.getElementById("response_area").value = JSON.stringify(data, null, 2))
-                .catch(error => document.getElementById("response_area").value = error);
+        function fetchContent() {
+            fetch("/content")
+                .then(resp => resp.json())
+                // Set responseArea from JSON contents
+                .then(data => document.getElementById("responseArea").value = JSON.stringify(data, null, 2))
+                .catch(error => document.getElementById("responseArea").value = error);
         }
     </script>
 </body>
