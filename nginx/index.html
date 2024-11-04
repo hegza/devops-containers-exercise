@@ -6,8 +6,10 @@
 </head>
 
 <body>
-    <button onClick="fetchContent()">REQUEST (fetchContent())</button>
-    <a href="shutdown.php">STOP (shutdown.php)</a>
+    <button onClick="fetchContent()">REQUEST</button>
+    <form action="shutdown.php">
+        <input type="submit" value="STOP" />
+    </form>
     <textarea id="responseArea" name="responseArea" rows="20" cols="100">
     Text area.
     </textarea>
