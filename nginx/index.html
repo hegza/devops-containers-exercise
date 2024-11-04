@@ -15,8 +15,9 @@
     <script>
         function startRequest() {
             fetch("/proxy")
-                .then(response => response.text())
-                .then(data => alert("Request forwarded: " + data))
+                .then(response => response.json())
+                // Set response_area from JSON contents
+                .then(data => document.getElementById("response_area").value = JSON.stringify(data, null, 2))
                 .catch(error => console.error("Error:", error));
         }
     </script>
