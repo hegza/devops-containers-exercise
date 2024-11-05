@@ -1,9 +1,0 @@
-cont-build:
-    podman build -t nginx -f Dockerfile
-
-test: cont-build
-    #!/usr/bin/env bash
-    set -euxo pipefail
-    hash=$(podman run -dit nginx)
-    podman logs $hash
-
