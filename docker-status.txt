@@ -1,10 +1,13 @@
-CONTAINER ID   IMAGE                                   COMMAND                  CREATED              STATUS              PORTS                                         NAMES
-2c2d1dd86c0d   devops-containers-exercise-service-rs   "./target/release/se…"   About a minute ago   Up About a minute   0.0.0.0:8199->3000/tcp, [::]:8199->3000/tcp   devops-containers-exercise-service-rs-1
-767c7df6268c   devops-containers-exercise-service-go   "./build/main"           About a minute ago   Up About a minute                                                 devops-containers-exercise-service-go-1
+CONTAINER ID   IMAGE                                   COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+07a2e7711d6a   devops-containers-exercise-nginx        "/docker-entrypoint.…"   6 minutes ago    Up 6 minutes    0.0.0.0:8198->80/tcp, [::]:8198->80/tcp   devops-containers-exercise-nginx-1
+e5dd2a27f8ef   devops-containers-exercise-service-rs   "./target/release/se…"   18 minutes ago   Up 18 minutes                                             devops-containers-exercise-service-rs-3
+b9bae3247fad   devops-containers-exercise-service-rs   "./target/release/se…"   18 minutes ago   Up 18 minutes                                             devops-containers-exercise-service-rs-2
+8277fa93ac77   devops-containers-exercise-service-rs   "./target/release/se…"   18 minutes ago   Up 18 minutes                                             devops-containers-exercise-service-rs-1
+d075134a3d95   devops-containers-exercise-service-go   "./build/main"           18 minutes ago   Up 18 minutes                                             devops-containers-exercise-service-go-1
 
-NETWORK ID     NAME                                 DRIVER    SCOPE
-234d14955174   bridge                               bridge    local
-ec3cbc82aeff   devops-containers-exercise_default   bridge    local
-8f98fb15308f   host                                 host      local
-db5236de2278   none                                 null      local
-
+NETWORK ID     NAME                                       DRIVER    SCOPE
+712746edb87e   bridge                                     bridge    local
+fb89df31aefd   devops-containers-exercise_default         bridge    local
+099c57a74f8f   devops-containers-exercise_loadbalancing   bridge    local
+8f98fb15308f   host                                       host      local
+db5236de2278   none                                       null      local
