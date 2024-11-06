@@ -1,5 +1,14 @@
 # LLM disclosure
 
+** For reviewer: **
+
+Consider using a command such as the one below to see what changed in this
+file between the 1st (containers) and 2nd (nginx) submission.
+
+```sh
+$ git diff exercise1 -- llm.txt
+```
+
 ## Meta
 
 - The used LLM tool: ChatGPT 4o available via https://chatgpt.com/
@@ -18,7 +27,10 @@ ideas behind Go project layout myself.
 in a very appropriate way. I already knew to avoid trying to generate anything
 that is "at the frontier" of open-source development, i.e., something that might
 not be well-represented in the data set, or anything safety critical, or
-anything that required a high amount of correctness.
+anything that required a high amount of correctness. In the second part of the
+assignment (nginx), the LLM left out a crucial slash character that led me down
+a multi-hour debugging venture. To be fair, nginx could have been more helpful
+in helping to identify the error.
 - What were things that LLM was not able to provide: ChatGPT 4o is generally
 quite useless for producing code related to newer Rust web frameworks, as the
 training dataset for ChatGPT 4o does not include much on these.
@@ -73,7 +85,7 @@ CMD ["./main"]
 
 As I've written some containers before, I understand all of the commands
 produced by the LLM and mostly agree with its choices, with the following
-corrections:
+corrections: 
 
 I went to DockerHub to find the latest image for `golang`, as LLMs are typically
 frozen in time and cannot provide such information. I specifically wanted a
@@ -138,3 +150,18 @@ implementation, then I wrote the IPv6 version to match with the pre-validated Go
 code for 4193.
 
 I realized only later that I needed none of this and removed all relevant code.
+
+## 4.11. on configuring nginx for PHP
+
+Based on a quick online search, I figured the easiest way to run server-side
+scripts for the shutdown functionality is likely to be PHP. I then queried
+ChatGPT 4o about how I might configure nginx server to run server-side PHP
+scripts (which I new almost nothing about a priori). It suggested the use of PHP
+and provided some default configurations. This was actually quite
+counter-productive, as I still had to figure out what each of the configuration
+options were trying to achieve to actually make it work. The LLM also left out
+a crucial slash from the endpoint URL which I spent about 4-5 hours tracking down.
+
+All in all, I wasn't able to benefit a lot from an LLM for the second part of
+this assignment.
+
